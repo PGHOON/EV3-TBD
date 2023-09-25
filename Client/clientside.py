@@ -3,14 +3,13 @@ from ev3dev.ev3 import *
 import socket
 
 lcd = Screen()
+btn = Button()
 
-Server_Addr = ('169.254.252.180', 5555)
+Server_Addr = ('169.254.153.220', 5555)
 
-# Create a socket
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Connect to the server
-client_socket.connect(Server_Addr)
+client.connect(Server_Addr)
 lcd.clear()
 lcd.draw.text((10, 5), 'Connecting to Server ...')
 lcd.update()
@@ -19,6 +18,23 @@ while True:
     lcd.clear()
     lcd.draw.text((10, 5), 'Connected!!!')
     lcd.update()
-    client_socket.send('...'.encode())
+    client.send('...'.encode())
+    if btn.right:
+        client.send(':right'.encode())
+        try:
+            file = open('watermelon.jpg', 'rb')
+            data = file.read(2048)
+            while data:
+                client.send(data)
+                data = file.read(2048)
+            lcd.clear()
+            lcd.draw.text((10, 5), 'Image has been sent')
+            lcd.update()
+        except Exception as e:
+            lcd.clear()
+            lcd.draw.text((10, 5), "Error")
+            lcd.update()
+        finally:
+            file.close()
 
-client_socket.close()
+client.close()
