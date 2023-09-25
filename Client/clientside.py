@@ -5,7 +5,7 @@ import socket
 lcd = Screen()
 btn = Button()
 
-Server_Addr = ('169.254.153.220', 5555)
+Server_Addr = ('169.254.244.189', 5555)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -21,20 +21,16 @@ while True:
     client.send('...'.encode())
     if btn.right:
         client.send(':right'.encode())
-        try:
-            file = open('watermelon.jpg', 'rb')
-            data = file.read(2048)
-            while data:
-                client.send(data)
-                data = file.read(2048)
-            lcd.clear()
-            lcd.draw.text((10, 5), 'Image has been sent')
-            lcd.update()
-        except Exception as e:
-            lcd.clear()
-            lcd.draw.text((10, 5), "Error")
-            lcd.update()
-        finally:
-            file.close()
 
+        with open('watermelon.jpg', 'rb') as file:
+            file_size = len(file.read())
+            client.send(str(file_size).encode())
+            file.seek(0)
+            while True:
+                data = file.read(1024)
+                if not data:
+                    break
+                client.send(data)
+
+file.close()
 client.close()

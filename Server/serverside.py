@@ -25,16 +25,17 @@ while True:
             print("...")
         elif data == ':right':
             print("right button pressed")
-            file = open('copymelon.jpg', "wb")
-            jpg_chunk = client_socket.recv(2048)
 
-            while jpg_chunk:    ## I guess this while-loop never ends...
-                file.write(jpg_chunk)
-                jpg_chunk = client_socket.recv(2048)
-                if not jpg_chunk:
-                    file.close()
-                    continue
-            print("Image received")
+            file_size = int(client_socket.recv(1024).decode())
+            with open('received_image.jpg', "wb") as file:
+                received_size = 0
+                while received_size < file_size:
+                    jpg_chunk = client_socket.recv(1024)
+                    if not jpg_chunk:
+                        break
+                    file.write(jpg_chunk)
+                    received_size += len(jpg_chunk)
+            print("Image received and saved as 'received_image.jpg'")
 
     except ConnectionResetError:
         print("Connection closed by client.")
