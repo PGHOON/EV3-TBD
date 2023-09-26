@@ -6,7 +6,7 @@ current implemented operation:<br/>
   -Predict what fruit it is from the picture received from EV3<br/>
   /*I have a dataset that I used to assign in class, so I just did it as a fruit,<br/>
   but I can replace it with another dataset as much as I want. It's not a big deal*/<br/>
-  -wifi-connection
+  -wifi-connection<br/>
   -fswebcam installed
   
 subsequent phase:<br/>
