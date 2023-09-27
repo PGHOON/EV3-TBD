@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from ev3dev.ev3 import *
 import socket
+import subprocess
 
 lcd = Screen()
 btn = Button()
 
-Server_Addr = ('169.254.244.189', 5555)
+Server_Addr = ('192.168.2.2', 12344)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -21,8 +22,11 @@ while True:
     client.send('...'.encode())
     if btn.right:
         client.send(':right'.encode())
+        file_path = "/home/robot/socket_test/webcam.jpg"
+        command = ["fswebcam", "--no-banner", "--resolution", "480x480", "--save", file_path]
+        subprocess.run(command)
 
-        with open('watermelon.jpg', 'rb') as file:
+        with open('webcam.jpg', 'rb') as file:
             file_size = len(file.read())
             client.send(str(file_size).encode())
             file.seek(0)
