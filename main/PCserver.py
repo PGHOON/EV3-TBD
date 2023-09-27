@@ -4,13 +4,11 @@ from keras.models import load_model
 from keras.applications.vgg16 import preprocess_input
 from PIL import Image
 
-HOST = '0.0.0.0'    #or Replace "0.0.0.0" with the IP address that appears in the top left corner of the EV3 brick's screen.
-                    #0.0.0.0 will listen every port available
-PORT = 12345
+Server_Addr = ('192.168.2.2', 12344)
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-server_socket.bind((HOST, PORT))
+server_socket.bind(Server_Addr)
 
 server_socket.listen(1)
 print("Waiting for a connection...")
