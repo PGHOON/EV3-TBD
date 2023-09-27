@@ -6,7 +6,7 @@ from PIL import Image
 
 HOST = '0.0.0.0'    #or Replace "0.0.0.0" with the IP address that appears in the top left corner of the EV3 brick's screen.
                     #0.0.0.0 will listen every port available
-PORT = 5555
+PORT = 12345
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -43,6 +43,7 @@ while True:
 
 
             ### predicting the Image ###
+            CLASSES = ['Apple', 'Avocado', 'Kiwi', 'Pineapple', 'Cherry', 'Watermelon', 'Mango', 'Banana', 'Orange', 'Strawberry']
             model = load_model('model.h5')      #Train accuracy : 97%, Test accuracy : 45%
             image_path = 'received_image.jpg'   #A pretty decent model, considering that the class number is 10.
             img = Image.open(image_path)
@@ -53,9 +54,10 @@ while True:
 
             predictions = model.predict(img)
 
-            predicted_class = np.argmax(predictions, axis=1)
+            predicted_class_index = np.argmax(predictions, axis=1)
+            predicted_class_name = CLASSES[predicted_class_index[0]]
 
-            print("Predicted class:", predicted_class)
+            print("Predicted class:", predicted_class_name)
 
     except ConnectionResetError:
         print("Connection closed by client.")
