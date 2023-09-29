@@ -1,11 +1,10 @@
-import socket
-import numpy as np
 from keras.models import load_model
 from keras.applications.vgg16 import preprocess_input
-from PIL import Image
+from PIL import Image, ImageTk
 import tkinter as tk
 
-Server_Addr = ("0.0.0.0", 12344)
+
+Server_Addr = ("0.0.0.0", 12333)
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind(Server_Addr)
@@ -18,10 +17,14 @@ print(f"Connection from {client_address}")
 
 window = tk.Tk()
 window.title("EV3 Remote Control")
-window.geometry("809x500")
+window.geometry("645x600")
 
 STATUS_connection = tk.Label(window, text="Connected!", fg="green")
 STATUS_connection.grid(row=0, column=0)
+
+IMAGE = tk.Label(window)
+IMAGE.grid(row=4, column=0, columnspan=5)
+update_image("received_image.jpg")
 
 def send_command(command):
     try:
@@ -59,6 +62,16 @@ def Film():
     STATUS_signal.config(text="Film")
     STATUS_signal.grid(row=1, column=4, columnspan=4)
     
+def update_image(image_path):
+    try:
+        image = Image.open(image_path)
+        photo = ImageTk.PhotoImage(image)
+
+        IMAGE.config(image=photo)
+        IMAGE.image = photo
+    except Exception as e:
+        print(f"Error updating image: {str(e)}")
+    
 def Exit():
     client_socket.close()
     server_socket.close()
@@ -87,5 +100,46 @@ ExitButton.grid(row=2, column=4)
 
 STATUS_signal = tk.Label(window, text="")
 STATUS_signal.grid(row=1, column=4, columnspan=4)
+
+while True:
+    try:
+        data = client_socket.recv(1024).decode()
+        if not data:
+            print("Connection closed by client.")
+            break
+
+        if data == ':Film':
+            file_size = int(client_socket.recv(1024).decode())
+            with open('received_image.jpg', "wb") as file:
+                received_size = 0
+                while received_size < file_size:
+                    jpg_chunk = client_socket.recv(1024)
+                    if not jpg_chunk:
+                        break
+                    file.write(jpg_chunk)
+                    received_size += len(jpg_chunk)
+            update_image("received_image.jpg")
+
+            ### predicting the Image ###
+            CLASSES = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+            model = load_model('model2.h5')      #Train accuracy : 94%, Test accuracy : 86%
+            image_path = 'received_image.jpg'
+            img = Image.open(image_path)
+            img = img.resize((32, 32))
+            img = np.array(img)
+            img = np.expand_dims(img, axis=0)
+            img = preprocess_input(img)
+
+            predictions = model.predict(img)
+
+            predicted_class_index = np.argmax(predictions, axis=1)
+            predicted_class_name = CLASSES[predicted_class_index[0]]
+
+            STATUS_signal.config(text=predicted_class_name)
+            STATUS_signal.grid(row=1, column=4, columnspan=4)
+
+    except ConnectionResetError:
+        print("Connection closed by client.")
+        break
 
 window.mainloop()
