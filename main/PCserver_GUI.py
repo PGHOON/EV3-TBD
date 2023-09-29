@@ -30,12 +30,12 @@ def send_command(command):
         connection_status.config(text=f"Error: {str(e)}")
 
 def Forward():
-    send_command("forward")
+    send_command("Forward")
     STATUS_signal.config(text="Forward")
     STATUS_signal.grid(row=1, column=4, columnspan=4)
 
 def Backward():
-    send_command("backward")
+    send_command("Backward")
     STATUS_signal.config(text="Backward")
     STATUS_signal.grid(row=1, column=4, columnspan=4)
 

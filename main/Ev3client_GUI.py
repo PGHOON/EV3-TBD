@@ -6,7 +6,7 @@ import subprocess
 lcd = Screen()
 btn = Button()
 
-Server_Addr = ('192.168.0.10', 12344)
+Server_Addr = ('', 12333)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -20,31 +20,31 @@ while True:
     lcd.draw.text((10, 5), 'Waiting Command...')
     lcd.update()
     data = client.recv(1024).decode()
-    if data == 'Forward'
+    if data == 'Forward':
         lcd.clear()
         lcd.draw.text((10, 5), 'Forward')
         lcd.update()
         """Motor Control"""
 
-    elif data == 'Backward'
+    elif data == 'Backward':
         lcd.clear()
         lcd.draw.text((10, 5), 'Backward')
         lcd.update()
         """Motor Control"""
 
-    elif data == 'Left'
+    elif data == 'Left':
         lcd.clear()
         lcd.draw.text((10, 5), 'Left')
         lcd.update()
         """Motor Control"""
 
-    elif data == 'Right'
+    elif data == 'Right':
         lcd.clear()
         lcd.draw.text((10, 5), 'Right')
         lcd.update()
         """Motor Control"""
 
-    elif data == 'Stop'
+    elif data == 'Stop':
         lcd.clear()
         lcd.draw.text((10, 5), 'Stop')
         lcd.update()
@@ -69,7 +69,7 @@ while True:
                 client.send(data)
                 file.close()
 
-    elif data == 'Exit'
+    elif data == 'Exit':
         lcd.clear()
         lcd.draw.text((10, 5), 'Exit')
         lcd.update()
