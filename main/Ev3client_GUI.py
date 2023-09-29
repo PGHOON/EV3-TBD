@@ -6,7 +6,7 @@ import subprocess
 lcd = Screen()
 btn = Button()
 
-Server_Addr = ('', 12333)
+Server_Addr = ('169.254.68.110', 12333)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -54,6 +54,7 @@ while True:
         lcd.clear()
         lcd.draw.text((10, 5), 'Film')
         lcd.update()
+        client.send(':Film'.encode())
         file_path = '/home/robot/socket_test/webcam.jpg'
         command = ['fswebcam', '--no-banner', '--resolution', '480x480', '--save', file_path]
         subprocess.run(command)
