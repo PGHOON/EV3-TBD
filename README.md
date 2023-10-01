@@ -1,14 +1,12 @@
-# EV3-TBD
+# ev3dev_ExplorationRover
 
 current implemented operation:<br/>
-  -socket connection between EV3 and PC(tested environment: Mac m2)<br/>
-  -take image file(jpg) in real time on EV3<br/>
+  -Socket connection between EV3 and PC(tested environment: Mac m2)<br/>
+  -Take and save image file with C270 webcam<br/>
   -Send the image file(jpg) to PC from EV3 and save it to PC<br/>
-  -Predict what fruit it is from the picture received from EV3<br/>
-  /*I have a dataset that I used to assign in class, so I just did it as a fruit,<br/>
-  but I can replace it with another dataset as much as I want. It's not a big deal*/<br/>
-  -wifi connection<br/>
-  -fswebcam installed
+  -Predict the image type from the picture received from EV3<br/>
+  -GUI EV3 Controller
   
 subsequent phase:<br/>
+  -Video Stream<br/>
   -TBD...<br/>
