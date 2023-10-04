@@ -5,6 +5,8 @@ import subprocess
 
 lcd = Screen()
 btn = Button()
+A_motor = Motor(Port.A)
+D_motor = Motor(Port.D)
 
 Server_Addr = ('169.254.68.110', 12333)
 
@@ -25,30 +27,35 @@ while True:
         lcd.draw.text((10, 5), 'Forward')
         lcd.update()
         """Motor Control"""
+        A_motor.run(50)
 
     elif data == 'Backward':
         lcd.clear()
         lcd.draw.text((10, 5), 'Backward')
         lcd.update()
         """Motor Control"""
+        A_motor.run(-50)
 
     elif data == 'Left':
         lcd.clear()
         lcd.draw.text((10, 5), 'Left')
         lcd.update()
         """Motor Control"""
+        D_motor.run_angle(50, 90, then=Stop.HOLD, wait=True)
 
     elif data == 'Right':
         lcd.clear()
         lcd.draw.text((10, 5), 'Right')
         lcd.update()
         """Motor Control"""
+        D_motor.run_angle(-50, 90, then=Stop.HOLD, wait=True)
 
     elif data == 'Stop':
         lcd.clear()
         lcd.draw.text((10, 5), 'Stop')
         lcd.update()
         """Motor Control"""
+        A_motor.stop()
 
     elif data == 'Film':
         lcd.clear()
