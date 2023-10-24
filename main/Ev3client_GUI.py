@@ -5,10 +5,11 @@ import subprocess
 
 lcd = Screen()
 btn = Button()
-A_motor = Motor(Port.A)
-D_motor = Motor(Port.D)
+A_motor = LargeMotor('outA')
+D_motor = LargeMotor('outD')
 
-Server_Addr = ('169.254.68.110', 12333)
+Server_Addr = ('192.168.23.', 12344)
+#IPv4 IP address
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -27,28 +28,28 @@ while True:
         lcd.draw.text((10, 5), 'Forward')
         lcd.update()
         """Motor Control"""
-        A_motor.run(50)
+        A_motor.run_forever(speed_sp=500)
 
     elif data == 'Backward':
         lcd.clear()
         lcd.draw.text((10, 5), 'Backward')
         lcd.update()
         """Motor Control"""
-        A_motor.run(-50)
+        A_motor.run_forever(speed_sp=-500)
 
     elif data == 'Left':
         lcd.clear()
         lcd.draw.text((10, 5), 'Left')
         lcd.update()
         """Motor Control"""
-        D_motor.run_angle(50, 90, then=Stop.HOLD, wait=True)
+        D_motor.run_to_rel_pos(position_sp=45, speed_sp=500).wait()
 
     elif data == 'Right':
         lcd.clear()
         lcd.draw.text((10, 5), 'Right')
         lcd.update()
         """Motor Control"""
-        D_motor.run_angle(-50, 90, then=Stop.HOLD, wait=True)
+        D_motor.run_to_rel_pos(position_sp=45, speed_sp=500).wait()
 
     elif data == 'Stop':
         lcd.clear()
@@ -62,11 +63,12 @@ while True:
         lcd.draw.text((10, 5), 'Film')
         lcd.update()
         client.send(':Film'.encode())
-        file_path = '/home/robot/socket_test/webcam.jpg'
+        
+        file_path = '/home/robot/test5/webcam.jpg'
         command = ['fswebcam', '--no-banner', '--resolution', '480x480', '--save', file_path]
         subprocess.run(command)
 
-        with open('webcam.jpg', 'rb') as file:
+        with open(file_path, 'rb') as file:
             file_size = len(file.read())
             client.send(str(file_size).encode())
             file.seek(0)
@@ -75,7 +77,6 @@ while True:
                 if not data:
                     break
                 client.send(data)
-                file.close()
 
     elif data == 'Exit':
         lcd.clear()
