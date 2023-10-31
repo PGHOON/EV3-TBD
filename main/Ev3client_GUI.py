@@ -42,14 +42,14 @@ while True:
         lcd.draw.text((10, 5), 'Left')
         lcd.update()
         """Motor Control"""
-        D_motor.run_to_rel_pos(position_sp=45, speed_sp=500).wait()
+        D_motor.run_to_rel_pos(position_sp=-20, speed_sp=200)
 
     elif data == 'Right':
         lcd.clear()
         lcd.draw.text((10, 5), 'Right')
         lcd.update()
         """Motor Control"""
-        D_motor.run_to_rel_pos(position_sp=45, speed_sp=500).wait()
+        D_motor.run_to_rel_pos(position_sp=20, speed_sp=200)
 
     elif data == 'Stop':
         lcd.clear()
@@ -57,6 +57,7 @@ while True:
         lcd.update()
         """Motor Control"""
         A_motor.stop()
+        D_motor.stop()
 
     elif data == 'Film':
         lcd.clear()
