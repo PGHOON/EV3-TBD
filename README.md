@@ -6,7 +6,12 @@ current implemented operation:<br/>
   -Send the image file(jpg) to PC from EV3 and save it to PC<br/>
   -Predict the image type from the picture received from EV3<br/>
   -GUI EV3 Controller<br/>
-  -Motor Control(UP, DOWN, LEFT, RIGHT, STOP)
+  -Motor Control(UP, DOWN, LEFT, RIGHT, STOP)<br/>
+
+modifying:<br/>
+  -Key control<br/>
+  -thread stabilization<br/>
+  -increase accuracy<br/>
   
 subsequent phase:<br/>
   -Video Stream<br/>
