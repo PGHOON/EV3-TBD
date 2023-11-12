@@ -65,11 +65,37 @@ def Film():
     STATUS_signal.grid(row=1, column=4, columnspan=4)
 
 def Exit():
-    client_socket.close()
     server_socket.close()
     window.destroy()
 
-
+def keyboard(k):
+    if k.keysym == 'Up':
+        send_command("Forward")
+        STATUS_signal.config(text="Forward")
+        STATUS_signal.grid(row=1, column=4, columnspan=4)
+    elif k.keysym == 'Down':
+        send_command("Backward")
+        STATUS_signal.config(text="Backward")
+        STATUS_signal.grid(row=1, column=4, columnspan=4)
+    elif k.keysym == 'Left':
+        send_command("Left")
+        STATUS_signal.config(text="Left")
+        STATUS_signal.grid(row=1, column=4, columnspan=4)
+    elif k.keysym == 'Right':
+        send_command("Right")
+        STATUS_signal.config(text="Right")
+        STATUS_signal.grid(row=1, column=4, columnspan=4)
+    elif k.keysym == 'space':
+        send_command("Stop")
+        STATUS_signal.config(text="Stop")
+        STATUS_signal.grid(row=1, column=4, columnspan=4)
+    elif k.char == 'f' or k.char == 'F':
+        send_command("Film")
+        STATUS_signal.config(text="Film")
+        STATUS_signal.grid(row=1, column=4, columnspan=4)
+    else:
+        return
+        
 def handle_client_thread(client_socket):
     while True:
         try:
@@ -163,4 +189,6 @@ STATUS_signal.grid(row=1, column=4, columnspan=4)
 client_thread = threading.Thread(target=handle_client_connection)
 client_thread.start()
 
+window.bind('<KeyPress>', keyboard)
+window.focus_set()
 window.mainloop()
