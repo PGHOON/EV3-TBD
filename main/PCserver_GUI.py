@@ -83,7 +83,8 @@ def handle_client_thread(client_socket):
                 with open('received_image.jpg', "wb") as file:
                     received_size = 0
                     while received_size < file_size:
-                        jpg_chunk = client_socket.recv(1024)
+                        bytes_to_read = min(1024, file_size - received_size)
+                        jpg_chunk = client_socket.recv(bytes_to_read)
                         if not jpg_chunk:
                             break
                         file.write(jpg_chunk)
@@ -110,19 +111,24 @@ def handle_client_thread(client_socket):
 
         except ConnectionResetError:
             print("Connection closed by client.")
-            break
+        finally:
+            client_socket.close()
 
 def handle_client_connection():
     global client_socket
     client_socket, client_address = server_socket.accept()
     print(f"Connection from {client_address}")
+    STATUS_connection = tk.Label(window, text="Connected!", fg="green")
+    STATUS_connection.grid(row=0, column=0)
     handle_client_thread(client_socket)
+    client_thread = threading.Thread(target=handle_client_thread, args=(client_socket,))
+    client_thread.start()
 
 window = tk.Tk()
 window.title("EV3 Remote Control")
 window.geometry("645x600")
 
-STATUS_connection = tk.Label(window, text="Connected!", fg="green")
+STATUS_connection = tk.Label(window, text="Waiting...", fg="red")
 STATUS_connection.grid(row=0, column=0)
 
 IMAGE = tk.Label(window)
