@@ -2,6 +2,7 @@
 from ev3dev.ev3 import *
 import socket
 import subprocess
+import os
 
 lcd = Screen()
 btn = Button()
@@ -13,16 +14,26 @@ Server_Addr = ('192.168.23.', 12344)
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-client.connect(Server_Addr)
-lcd.clear()
-lcd.draw.text((10, 5), 'Connecting to Server ...')
+try:
+    client.connect(Server_Addr)
+    lcd.clear()
+    lcd.draw.text((10, 5), 'Connected to Server')
+except socket.error as e:
+    lcd.clear()
+    lcd.draw.text((10, 5), f'Connection failed: {e}')
 lcd.update()
 
 while True:
-    lcd.clear()
-    lcd.draw.text((10, 5), 'Waiting Command...')
+    try:
+        data = client.recv(1024).decode()
+        lcd.clear()
+        lcd.draw.text((10, 5), 'Waiting Command...')
+    except socket.error as e:
+        lcd.clear()
+        lcd.draw.text((10, 5), f'Error: {e}')
+        break
     lcd.update()
-    data = client.recv(1024).decode()
+
     if data == 'Forward':
         lcd.clear()
         lcd.draw.text((10, 5), 'Forward')
@@ -69,15 +80,17 @@ while True:
         command = ['fswebcam', '--no-banner', '--resolution', '480x480', '--save', file_path]
         subprocess.run(command)
 
-        with open(file_path, 'rb') as file:
-            file_size = len(file.read())
-            client.send(str(file_size).encode())
-            file.seek(0)
-            while True:
-                data = file.read(1024)
-                if not data:
-                    break
-                client.send(data)
+        if os.path.exists(file_path):
+            with open(file_path, 'rb') as file:
+                file_size = os.path.getsize(file_path)
+                client.send(str(file_size).encode())
+                for chunk in iter(lambda: file.read(1024), b''):
+                    client.send(chunk)
+        else:
+            lcd.clear()
+            lcd.draw.text((10, 5), 'File not found')
+            lcd.update()
+        
 
     elif data == 'Exit':
         lcd.clear()
