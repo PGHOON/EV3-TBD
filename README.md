@@ -10,3 +10,6 @@ current implemented operation:<br/>
 
 PC_Server_GUI controller:
 <img width="757" alt="Screenshot 2023-12-01 at 00 25 37" src="https://github.com/PGHOON/ev3dev-ExplorationRover/assets/64999538/91f89521-34da-4acb-8a67-56fd9debc60f">
+
+EV_Client:
+<img width="518" alt="Screenshot 2023-12-07 at 21 19 41" src="https://github.com/PGHOON/ev3dev-ExplorationRover/assets/64999538/fa173ae3-571e-4e90-982f-e5c7bcf57eec">
